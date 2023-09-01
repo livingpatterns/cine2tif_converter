@@ -19,11 +19,11 @@ python -m venv venv
 `On Windows`
 - In cmd.exe
     ``` sh
-    source .venv\Scripts\activate.bat
+    .\venv\Scripts\Activate.bat
     ```
 - In PowerShell
     ``` sh
-    source .venv\Scripts\Activate.ps1
+    .\venv\Scripts\Activate.ps1
     ```
 `On macOS and Linux`
 - In the terminal:
