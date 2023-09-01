@@ -20,19 +20,20 @@ from utils import save_as_mp4
 def main(folder_name):
     # Iterate over subdirectories of the main folder
     for root, dirs, files in os.walk(folder_name):
+        dirs[:] = [d for d in dirs if not d.startswith(('.', '$'))]
         for file in files:
             if file.endswith('.cine'):
                 # Create the converted directory if it doesn't exist
-                converted_dir = os.path.join(folder_name, os.path.basename(root) + '-mp4')
+                converted_dir = os.path.join(folder_name, "cine2mp4conversions", os.path.basename(root) + '-mp4')
                 if not os.path.exists(converted_dir):
                     os.makedirs(converted_dir)
 
                 # Convert the .txt file to .csv and save in the converted directory
                 input_file = os.path.join(root, file)
                 output_file = os.path.join(converted_dir, os.path.splitext(file)[0] + '.mp4')
+                print(f"Converting {input_file} to {output_file}")
                 save_as_mp4(input_file=input_file, output_file=output_file, fps=30)
 
-                print(f"Converted {input_file} to {output_file}")
 
 
 if __name__ == "__main__":
