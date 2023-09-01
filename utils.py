@@ -1,8 +1,10 @@
+import imageio
 import numpy as np
 import tifffile as tf
 
 from PIL import Image
 from tqdm import tqdm
+
 
 from pycine.file import read_header
 from pycine.raw import read_frames
@@ -41,3 +43,14 @@ def save_as_tif(input_file, output_file):
     with tf.TiffWriter(output_file, bigtiff=True) as tiff_writer:
         for im in imgs:
             tiff_writer.save(im, photometric=tf.PHOTOMETRIC.MINISBLACK)
+
+
+def save_as_mp4(input_file, output_file, fps):
+    header = read_header(cine_file=input_file)
+    frame_count = header["cinefileheader"].ImageCount
+
+    imgs = []
+    for i in tqdm(range(frame_count)):
+        imgs.append(np.asarray(get_frame_gray(input_file=input_file, frame=i+1)))
+
+    imageio.mimwrite(output_file, imgs, fps=fps)

@@ -3,3 +3,5 @@ tifffile
 pillow
 tqdm
 pycine
+imageio
+imageio[ffmpeg]
