@@ -31,8 +31,15 @@ def main(folder_name):
                 # Convert the .txt file to .csv and save in the converted directory
                 input_file = os.path.join(root, file)
                 output_file = os.path.join(converted_dir, os.path.splitext(file)[0] + '.mp4')
-                print(f"Converting {input_file} to {output_file}")
-                save_as_mp4(input_file=input_file, output_file=output_file, fps=30)
+                if os.path.exists(output_file):
+                    print(f"{output_file} already exists.")
+                else:
+                    try:
+                        save_as_mp4(input_file=input_file, output_file=output_file, fps=30)
+                        print(f"Conversion {input_file} to {output_file} complete.")
+                    except Exception as e:
+                        print(f"Error encountered: {e} in converting {input_file} to {output_file}.")
+    return
 
 
 
