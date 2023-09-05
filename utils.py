@@ -5,10 +5,12 @@ import tifffile as tf
 from PIL import Image
 from tqdm import tqdm
 
-
 from pycine.file import read_header
 from pycine.raw import read_frames
 from pycine.color import color_pipeline
+
+import cv2
+from nd2reader import ND2Reader
 
 def get_frame_gray(input_file, frame):
     with open(input_file, 'rb') as f:
@@ -54,3 +56,23 @@ def save_as_mp4(input_file, output_file, fps):
         imgs.append(np.asarray(get_frame_gray(input_file=input_file, frame=i+1)))
 
     imageio.mimwrite(output_file, imgs, fps=fps)
+
+def nd2_to_mp4(input_file, output_file, fps=30):
+    frames = []
+    # Read ND2 file
+    with ND2Reader(input_file) as images:
+        for i, image in enumerate(images):
+            # Convert image data to 8-bit (for JPEG compatibility)
+            norm_image = cv2.normalize(image, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+            image = cv2.cvtColor(norm_image, cv2.COLOR_GRAY2BGR)
+            frames.append(image)
+    
+    height, width, layers = frames[0].shape
+
+    video = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height), isColor=True)
+
+    for i in tqdm(range(len(frames))):
+        video.write(frames[i])
+
+    cv2.destroyAllWindows()
+    video.release()

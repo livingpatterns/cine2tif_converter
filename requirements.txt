@@ -5,3 +5,5 @@ tqdm
 pycine
 imageio
 imageio[ffmpeg]
+nd2reader
+
